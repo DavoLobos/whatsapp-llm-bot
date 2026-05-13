@@ -1,0 +1,137 @@
+[
+  {
+    "id": "B001",
+    "title": "Cien años de soledad",
+    "author": "Gabriel García Márquez",
+    "genre": "Realismo mágico",
+    "price": 8500,
+    "stock": 12,
+    "summary": "La saga de la familia Buendía a lo largo de siete generaciones en el pueblo ficticio de Macondo."
+  },
+  {
+    "id": "B002",
+    "title": "Rayuela",
+    "author": "Julio Cortázar",
+    "genre": "Novela experimental",
+    "price": 7200,
+    "stock": 5,
+    "summary": "Novela contrapunto que puede leerse en orden lineal o saltando entre capítulos."
+  },
+  {
+    "id": "B003",
+    "title": "Ficciones",
+    "author": "Jorge Luis Borges",
+    "genre": "Cuento",
+    "price": 6900,
+    "stock": 8,
+    "summary": "Colección de cuentos fantásticos y filosóficos que redefinieron la literatura del siglo XX."
+  },
+  {
+    "id": "B004",
+    "title": "El amor en los tiempos del cólera",
+    "author": "Gabriel García Márquez",
+    "genre": "Realismo mágico",
+    "price": 8200,
+    "stock": 7,
+    "summary": "Historia de un amor que espera más de cincuenta años para concretarse."
+  },
+  {
+    "id": "B005",
+    "title": "El Aleph",
+    "author": "Jorge Luis Borges",
+    "genre": "Cuento",
+    "price": 7100,
+    "stock": 9,
+    "summary": "Cuentos que exploran el infinito, los espejos, los laberintos y la identidad."
+  },
+  {
+    "id": "B006",
+    "title": "Bestiario",
+    "author": "Julio Cortázar",
+    "genre": "Cuento",
+    "price": 6500,
+    "stock": 4,
+    "summary": "Primer libro de cuentos del autor, con relatos fantásticos enraizados en lo cotidiano."
+  },
+  {
+    "id": "B007",
+    "title": "Sapiens: De animales a dioses",
+    "author": "Yuval Noah Harari",
+    "genre": "Ensayo",
+    "price": 9500,
+    "stock": 15,
+    "summary": "Breve historia de la humanidad desde la prehistoria hasta el siglo XXI."
+  },
+  {
+    "id": "B008",
+    "title": "El psicoanalista",
+    "author": "John Katzenbach",
+    "genre": "Thriller",
+    "price": 7800,
+    "stock": 6,
+    "summary": "Un psiquiatra recibe una carta anónima dándole quince días para descubrir quién es su autor o suicidarse."
+  },
+  {
+    "id": "B009",
+    "title": "1984",
+    "author": "George Orwell",
+    "genre": "Distopía",
+    "price": 6800,
+    "stock": 20,
+    "summary": "Clásico distópico sobre vigilancia totalitaria, manipulación del lenguaje y resistencia individual."
+  },
+  {
+    "id": "B010",
+    "title": "Un mundo feliz",
+    "author": "Aldous Huxley",
+    "genre": "Distopía",
+    "price": 6500,
+    "stock": 11,
+    "summary": "Distopía donde el control se ejerce mediante el placer y el condicionamiento, no por la represión."
+  },
+  {
+    "id": "B011",
+    "title": "El nombre del viento",
+    "author": "Patrick Rothfuss",
+    "genre": "Fantasía",
+    "price": 10500,
+    "stock": 3,
+    "summary": "Primer volumen de la Crónica del Asesino de Reyes. La historia de Kvothe contada por él mismo."
+  },
+  {
+    "id": "B012",
+    "title": "Juego de tronos",
+    "author": "George R. R. Martin",
+    "genre": "Fantasía",
+    "price": 11800,
+    "stock": 7,
+    "summary": "Primer libro de Canción de Hielo y Fuego. Política, traición y dragones en Poniente."
+  },
+  {
+    "id": "B013",
+    "title": "Crónica de una muerte anunciada",
+    "author": "Gabriel García Márquez",
+    "genre": "Realismo mágico",
+    "price": 5800,
+    "stock": 10,
+    "summary": "Reconstrucción de un asesinato que todo el pueblo sabía que iba a ocurrir."
+  },
+  {
+    "id": "B014",
+    "title": "Pedagogía del oprimido",
+    "author": "Paulo Freire",
+    "genre": "Ensayo",
+    "price": 8800,
+    "stock": 5,
+    "summary": "Obra fundamental de la educación popular y la pedagogía crítica latinoamericana."
+  },
+  {
+    "id": "B015",
+    "title": "Los detectives salvajes",
+    "author": "Roberto Bolaño",
+    "genre": "Novela experimental",
+    "price": 9200,
+    "stock": 4,
+    "summary": "Una novela coral sobre dos jóvenes poetas y la búsqueda de una escritora mexicana desaparecida."
+  }
+]
