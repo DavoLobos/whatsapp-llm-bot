@@ -123,6 +123,7 @@
       appendMessage("user", text);
       const typing = appendTyping();
       sendBtn.disabled = true;
+      let keepDisabled = false;
       try {
         const res = await fetch("/chat", {
           method: "POST",
@@ -133,19 +134,19 @@
         typing.remove();
         if (!res.ok) {
           appendMessage("sys", data.detail || "Error del servidor.");
-          if (res.status === 429) sendBtn.disabled = true;
+          if (res.status === 429) keepDisabled = true;
           return;
         }
         appendMessage("bot", data.reply);
         if (typeof data.remaining === "number") {
           metaEl.textContent = `Quedan ${data.remaining} mensajes en esta sesión.`;
-          if (data.remaining === 0) sendBtn.disabled = true;
+          if (data.remaining === 0) keepDisabled = true;
         }
       } catch (err) {
         typing.remove();
         appendMessage("sys", "No pude conectarme con el servidor. Probá de nuevo.");
       } finally {
-        if (!sendBtn.disabled) sendBtn.disabled = false;
+        sendBtn.disabled = keepDisabled;
       }
     }
 
