@@ -4,6 +4,8 @@ WhatsApp customer support bot for a fictional bookstore, powered by Claude with 
 
 The bot answers customer questions in natural language: searches the catalog, looks up book details, and suggests similar titles. Claude decides when to call each tool based on the conversation — no rigid intent-classification, no scripted flows.
 
+The same FastAPI app also serves a **web chat demo** at `/`, so the bot can be tried in a browser without any WhatsApp setup.
+
 ```
         ┌────────────┐    webhook     ┌─────────────┐
         │ WhatsApp   │ ─────────────▶ │  FastAPI    │
@@ -48,6 +50,16 @@ This is a clean, modern reference for building an LLM-powered WhatsApp bot. Spec
 - Per-user conversation memory (in-process; swappable).
 - Webhook signature verification.
 - Type-safe end to end (Pydantic + type hints).
+
+## Web demo
+
+The app serves a minimal single-page chat UI at `GET /` that calls `POST /chat`. The chat endpoint uses the `app/agent_claude_code.py` path (Claude Agent SDK + Claude Code auth), so the demo can run on a server that's logged into a Claude Pro/Max subscription without any Anthropic API key. Per-session and global daily caps live in `app/rate_limit.py`.
+
+```bash
+# requires `claude` (Claude Code CLI) installed and logged in
+uvicorn app.main:app --port 8000
+# open http://localhost:8000
+```
 
 ## Try it without setting up WhatsApp
 

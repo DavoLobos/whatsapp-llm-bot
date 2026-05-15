@@ -19,16 +19,22 @@ from .config import settings
 logger = logging.getLogger(__name__)
 
 GRAPH_API_VERSION: Final = "v22.0"
-_SEND_URL: Final = (
-    f"https://graph.facebook.com/{GRAPH_API_VERSION}/{settings.whatsapp_phone_number_id}/messages"
-)
+
+
+def _send_url() -> str:
+    if not settings.whatsapp_phone_number_id:
+        raise RuntimeError("WHATSAPP_PHONE_NUMBER_ID is not configured")
+    return f"https://graph.facebook.com/{GRAPH_API_VERSION}/{settings.whatsapp_phone_number_id}/messages"
 
 
 def verify_signature(raw_body: bytes, signature_header: str | None) -> bool:
     """Verify Meta's `X-Hub-Signature-256` header against the raw request body.
 
     Returns `True` if the signature matches the app secret. Constant-time compare.
+    Returns `False` if the app secret is not configured.
     """
+    if not settings.whatsapp_app_secret:
+        return False
     if not signature_header or not signature_header.startswith("sha256="):
         return False
     expected = hmac.new(
@@ -42,6 +48,8 @@ def verify_signature(raw_body: bytes, signature_header: str | None) -> bool:
 
 async def send_text(to: str, text: str) -> None:
     """Send a plain text WhatsApp message via Meta's Cloud API."""
+    if not settings.whatsapp_token:
+        raise RuntimeError("WHATSAPP_TOKEN is not configured")
     payload = {
         "messaging_product": "whatsapp",
         "to": to,
@@ -53,7 +61,7 @@ async def send_text(to: str, text: str) -> None:
         "Content-Type": "application/json",
     }
     async with httpx.AsyncClient(timeout=15.0) as client:
-        response = await client.post(_SEND_URL, json=payload, headers=headers)
+        response = await client.post(_send_url(), json=payload, headers=headers)
     if response.status_code >= 400:
         logger.error("WhatsApp send failed: %s %s", response.status_code, response.text)
         response.raise_for_status()

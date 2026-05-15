@@ -23,7 +23,23 @@ from .tools import TOOLS
 
 logger = logging.getLogger(__name__)
 
-_client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
+_client: anthropic.Anthropic | None = None
+
+
+def _get_client() -> anthropic.Anthropic:
+    """Lazy-init the Anthropic client so import doesn't require an API key.
+
+    Allows the web demo (which uses `agent_claude_code` and Claude Code auth)
+    to run without ANTHROPIC_API_KEY configured.
+    """
+    global _client
+    if _client is None:
+        if not settings.anthropic_api_key:
+            raise RuntimeError(
+                "ANTHROPIC_API_KEY is not configured — required for the WhatsApp/API path."
+            )
+        _client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
+    return _client
 
 
 def _build_system_prompt() -> list[dict]:
@@ -68,7 +84,7 @@ def reply(history: list[dict], user_message: str) -> str:
     """
     messages = [*history, {"role": "user", "content": user_message}]
 
-    runner = _client.beta.messages.tool_runner(
+    runner = _get_client().beta.messages.tool_runner(
         model=settings.model_id,
         max_tokens=2048,
         system=_SYSTEM,
