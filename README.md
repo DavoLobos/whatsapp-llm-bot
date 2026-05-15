@@ -49,6 +49,28 @@ This is a clean, modern reference for building an LLM-powered WhatsApp bot. Spec
 - Webhook signature verification.
 - Type-safe end to end (Pydantic + type hints).
 
+## Try it without setting up WhatsApp
+
+Two CLI entry points let you chat with the bot logic (system prompt + tools) without provisioning a Meta WhatsApp number.
+
+| Script | Auth | When to use |
+|---|---|---|
+| `scripts/chat.py` | `ANTHROPIC_API_KEY` env var | Standard path. Uses the Anthropic API directly — same code path as production. |
+| `scripts/chat_max.py` | Claude Code (`claude` CLI) auth | If you have a Claude Pro/Max subscription, run the bot through the [Claude Agent SDK](https://github.com/anthropics/claude-agent-sdk-python) and consume from your subscription instead of metered API billing. |
+
+```bash
+# Option A — Anthropic API key
+export ANTHROPIC_API_KEY=sk-ant-...
+python scripts/chat.py                              # interactive
+python scripts/chat.py "¿qué libros de Borges tenés?"  # one-shot
+
+# Option B — Claude Pro/Max subscription (requires `claude` CLI installed and logged in)
+python scripts/chat_max.py                          # interactive
+python scripts/chat_max.py "¿qué libros de Borges tenés?"
+```
+
+Both scripts exercise the same logic (system prompt, three tools, conversation state). The production code path in `app/agent.py` always uses the Anthropic SDK directly — `chat_max.py` is a deliberate parallel implementation showing how to wire the same bot through the Agent SDK for local testing.
+
 ## Quick start
 
 ```bash
