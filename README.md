@@ -1,10 +1,12 @@
 # whatsapp-llm-bot
 
+**Live demo:** [libreriademo.duckdns.org](https://libreriademo.duckdns.org)
+
 WhatsApp customer support bot for a fictional bookstore, powered by Claude with tool use. Built on FastAPI and the Meta WhatsApp Cloud API.
 
 The bot answers customer questions in natural language: searches the catalog, looks up book details, and suggests similar titles. Claude decides when to call each tool based on the conversation — no rigid intent-classification, no scripted flows.
 
-The same FastAPI app also serves a **web chat demo** at `/`, so the bot can be tried in a browser without any WhatsApp setup.
+The same FastAPI app also serves a **web chat demo** at `/`, so the bot can be tried in a browser without any WhatsApp setup. The [live demo](https://libreriademo.duckdns.org) runs against a Claude Pro/Max subscription via the Claude Agent SDK — no API key billing.
 
 ```
         ┌────────────┐    webhook     ┌─────────────┐
@@ -39,6 +41,32 @@ This is a clean, modern reference for building an LLM-powered WhatsApp bot. Spec
 3. **Adaptive thinking.** The agent uses `thinking: {type: "adaptive"}` with `effort: "medium"` — Claude decides per-message how much to think. No hardcoded token budget.
 4. **WhatsApp webhook security.** Webhook verification (`hub.challenge`) and HMAC-SHA256 signature validation of incoming payloads (`X-Hub-Signature-256`). See [`app/whatsapp.py`](app/whatsapp.py).
 5. **Stateless HTTP, stateful conversation.** Per-user conversation history kept in an in-memory store keyed by phone number. The store is swappable — replace with Redis for production (see "Production considerations" below).
+
+## Guardrails — what the bot will *not* do
+
+Tool use gives a model capabilities; it doesn't give it judgment. By default, asking the bot *"what books do you have?"* would dump the entire catalog — title, author, price, and stock count for every product. For a real business that's an information leak: a competitor can scrape your prices, your inventory, and your full assortment in two messages.
+
+The system prompt (in [`app/mcp_tools.py`](app/mcp_tools.py) and [`app/agent.py`](app/agent.py)) declares an explicit policy on top of the model's capabilities:
+
+- The bot will **not** list the full catalog, even when asked directly.
+- For open-ended questions like *"what do you have?"*, it answers with the **genres** available and asks the customer to narrow down.
+- It caps any single response to a small number of titles.
+- It doesn't reveal exact stock counts unless asked about a specific title.
+
+**Verify it on the [live demo](https://libreriademo.duckdns.org):**
+
+```
+You: ¿qué libros tenés en stock?
+Bot: No compartimos el catálogo completo, pero manejamos: Realismo mágico,
+     Cuento, Novela experimental, Ensayo, Distopía, Fantasía, Thriller.
+     ¿Hay un género o autor que te interese?
+
+You: ¿tenés algo de Borges?
+Bot: Tenemos dos títulos de Borges: Ficciones ($6.900) y El Aleph ($7.100).
+     ¿Te interesa alguno en particular?
+```
+
+This is a policy you tune per business, not per model — and that's exactly why it lives in the system prompt rather than in code. Shipping a new policy is a three-line edit; the code surface and the tool definitions don't change.
 
 ## Features
 
