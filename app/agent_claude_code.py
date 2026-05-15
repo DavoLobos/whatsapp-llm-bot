@@ -24,7 +24,10 @@ from claude_agent_sdk import (
     AssistantMessage,
     ClaudeAgentOptions,
     ClaudeSDKClient,
+    PermissionResultAllow,
+    PermissionResultDeny,
     TextBlock,
+    ToolPermissionContext,
 )
 
 from . import mcp_tools
@@ -44,13 +47,32 @@ _SESSIONS_LOCK = asyncio.Lock()
 _IDLE_TTL_SECONDS = 30 * 60
 
 
+async def _allow_only_bookstore_tools(
+    tool_name: str,
+    tool_input: dict,
+    _ctx: ToolPermissionContext,
+) -> PermissionResultAllow | PermissionResultDeny:
+    """Auto-allow our bookstore MCP tools; deny everything else.
+
+    Using `can_use_tool` instead of `permission_mode="bypassPermissions"`
+    so the service can run as root (Claude Code refuses to bypass perms
+    while running with elevated privileges).
+    """
+    if tool_name in mcp_tools.ALLOWED_TOOLS:
+        return PermissionResultAllow(updated_input=tool_input)
+    return PermissionResultDeny(
+        message=f"Tool {tool_name!r} is not enabled in this demo.",
+        interrupt=False,
+    )
+
+
 def _build_options() -> ClaudeAgentOptions:
     return ClaudeAgentOptions(
         system_prompt=mcp_tools.SYSTEM_PROMPT,
         mcp_servers={"bookstore": mcp_tools.build_mcp_server()},
         allowed_tools=mcp_tools.ALLOWED_TOOLS,
         setting_sources=[],
-        permission_mode="bypassPermissions",
+        can_use_tool=_allow_only_bookstore_tools,
     )
 
 
